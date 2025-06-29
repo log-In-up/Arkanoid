@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+#include "GameStateData.h"
+
 namespace Arkanoid
 {
 	enum class GameStateType
@@ -9,6 +11,7 @@ namespace Arkanoid
 		MainMenu,
 		Playing,
 		GameOver,
+		GameWin,
 		ExitDialog,
 		Records,
 	};
@@ -17,7 +20,7 @@ namespace Arkanoid
 	{
 	private:
 		GameStateType type = GameStateType::None;
-		void* data = nullptr;
+		std::shared_ptr<GameStateData> data = nullptr;
 		bool isExclusivelyVisible = false;
 	public:
 		GameState(GameState&& state) noexcept
@@ -25,9 +28,9 @@ namespace Arkanoid
 			operator=(std::move(state));
 		}
 
-		template<class T>
-		T* GetData() const {
-			return static_cast<T>(data);
+		bool IsExclusivelyVisible() const
+		{
+			return isExclusivelyVisible;
 		}
 
 		GameStateType GetType() const
@@ -35,19 +38,21 @@ namespace Arkanoid
 			return type;
 		}
 
-		bool IsExclusivelyVisible() const
+		template<class T>
+		T* GetData() const
 		{
-			return isExclusivelyVisible;
+			return static_cast<T*>(data.get());
 		}
 
 		GameState& operator= (GameState&& state) noexcept
 		{
 			type = state.type;
-			data = state.data;
+			data = std::move(state.data);
 			isExclusivelyVisible = state.isExclusivelyVisible;
 			state.data = nullptr;
 			return *this;
 		}
+
 	public:
 		GameState() = default;
 		GameState(const GameState& state) = delete;
@@ -55,10 +60,9 @@ namespace Arkanoid
 		~GameState();
 
 		GameState& operator= (const GameState& state) = delete;
+
 		void Draw(sf::RenderWindow& window);
 		void HandleWindowEvent(sf::Event& event);
 		void Update(float timeDelta);
-	private:
-		void* CopyData(const GameState& state) const;
 	};
 }

@@ -5,7 +5,9 @@ namespace Arkanoid
 	sf::Vector2f GetTextOrigin(const sf::Text& text, const sf::Vector2f& relativePosition)
 	{
 		sf::FloatRect textSize = text.getLocalBounds();
-		return {
+
+		return
+		{
 			(textSize.left + textSize.width) * relativePosition.x,
 			(textSize.top + textSize.height) * relativePosition.y,
 		};
@@ -14,7 +16,7 @@ namespace Arkanoid
 	void DrawTextList(sf::RenderWindow& window, const std::vector<sf::Text*>& items, float spacing, Orientation orientation, Alignment alignment, const sf::Vector2f& position, const sf::Vector2f& origin)
 	{
 		sf::FloatRect totalRect;
-		// Calculate total height/width of all texts
+
 		for (auto it = items.begin(); it != items.end(); ++it)
 		{
 			sf::FloatRect itemRect = (*it)->getGlobalBounds();
@@ -67,6 +69,7 @@ namespace Arkanoid
 			}
 		}
 	}
+
 	void SetTextData(sf::Text& text, sf::String string, sf::Font& font, unsigned int size)
 	{
 		text.setString(string);

@@ -1,28 +1,30 @@
 #pragma once
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics.hpp>
+
+#include "Collidable.h"
+#include "GameObject.h"
+#include "IObserver.h"
 
 namespace Arkanoid
 {
-	class Ball
+	class Ball final : public GameObject, public Colladiable, public IObservable
 	{
 	private:
-		sf::Sprite* sprite;
-		sf::Texture* texture;
 		sf::Vector2f* direction;
+		float* lastAngle;
+		float* multiplySpeed;
 	public:
-		const sf::Vector2f& GetPosition() const
-		{
-			return sprite->getPosition();
-		}
-	public:
-		Ball();
+		Ball(const sf::Vector2f& position);
 		~Ball();
-		void Draw(sf::RenderWindow& window) const;
-		void Init();
-		void ReboundFromPlatform();
-		void Update(float timeDelta);
+		bool GetCollision(std::shared_ptr<Colladiable> collidable) const override;
+		void Restart() override;
+		void Update(float timeDelta) override;
+
+		void ChangeAngle(float x);
+		void ChangeSpeed(float multipleSpeed);
+		void InvertDirectionX();
+		void InvertDirectionY();
+	private:
+		void OnHit();
 	};
 }

@@ -2,20 +2,23 @@
 #include <SFML/Graphics.hpp>
 
 #include "GameStateData.h"
-#include "Menu.h"
 
 namespace Arkanoid
 {
 	class Game;
 
-	class GameStateMainMenuData : public GameStateData
+	class GameStateGameWinData : public GameStateData
 	{
 	private:
 		sf::Font* font;
-		Menu* menu;
+		sf::RectangleShape* background;
+		sf::Text* gameWinText;
+		sf::Text* hintText;
+
+		float timeSinceGameWin = 0.f;
 	public:
-		GameStateMainMenuData();
-		~GameStateMainMenuData();
+		GameStateGameWinData();
+		~GameStateGameWinData();
 		void Draw(sf::RenderWindow& window) override;
 		void HandleWindowEvent(const sf::Event& event) override;
 		void Init() override;

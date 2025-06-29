@@ -1,13 +1,14 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+#include "GameStateData.h"
 #include "Menu.h"
 
 namespace Arkanoid
 {
 	class Game;
 
-	class GameStatePauseMenuData
+	class GameStatePauseMenuData : public GameStateData
 	{
 	private:
 		Menu* menu;
@@ -17,9 +18,9 @@ namespace Arkanoid
 	public:
 		GameStatePauseMenuData();
 		~GameStatePauseMenuData();
-		void Draw(sf::RenderWindow& window);
-		void HandleWindowEvent(const sf::Event& event);
-		void Init();
-		void Update(float timeDelta);
+		void Draw(sf::RenderWindow& window) override;
+		void HandleWindowEvent(const sf::Event& event) override;
+		void Init() override;
+		void Update(float timeDelta) override;
 	};
 }

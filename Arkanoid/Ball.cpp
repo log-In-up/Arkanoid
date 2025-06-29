@@ -2,66 +2,99 @@
 
 #include "Ball.h"
 #include "GameSettings.h"
+#include "randomizer.h"
 #include "Sprite.h"
 
 namespace
 {
-	// id textures
 	const std::string TEXTURE_ID = "ball";
 }
 
 namespace Arkanoid
 {
-	Ball::Ball()
+	Ball::Ball(const sf::Vector2f& position)
+		: GameObject(SETTINGS.TEXTURES_PATH + TEXTURE_ID + ".png", position, (float)SETTINGS.BALL_SIZE, (float)SETTINGS.BALL_SIZE)
 	{
-		sprite = new sf::Sprite();
-		texture = new sf::Texture();
-		direction = new sf::Vector2f();
+		const float angle = 90;
+		const auto pi = std::acos(-1.f);
+
+		direction = new sf::Vector2f(std::cos(pi / 180.f * angle), std::sin(pi / 180.f * angle));
+
+		lastAngle = new float(90.f);
+		multiplySpeed = new float(1.f);
 	}
 
 	Ball::~Ball()
 	{
-		delete sprite;
 		delete direction;
-		delete texture;
+		delete lastAngle;
+		delete multiplySpeed;
 	}
 
-	void Ball::Draw(sf::RenderWindow& window) const
+	bool Ball::GetCollision(std::shared_ptr<Colladiable> collidable) const
 	{
-		DrawSprite(*sprite, window);
+		auto gameObject = std::dynamic_pointer_cast<GameObject>(collidable);
+		assert(gameObject);
+
+		return GetRect().intersects(gameObject->GetRect());
 	}
 
-	void Ball::Init()
+	void Ball::Restart()
 	{
-		assert(texture->loadFromFile(TEXTURES_PATH + TEXTURE_ID + ".png"));
+		GameObject::Restart();
 
-		InitSprite(*sprite, BALL_SIZE, BALL_SIZE, *texture);
-		sprite->setPosition({ SCREEN_WIDTH / 2.0, SCREEN_HEIGHT - PLATFORM_HEIGHT - BALL_SIZE / 2.f });
-
-		const float angle = 45.f + rand() % 90; // [45, 135] degree
+		const float angle = 90;
 		const auto pi = std::acos(-1.f);
+
 		direction->x = std::cos(pi / 180.f * angle);
 		direction->y = std::sin(pi / 180.f * angle);
 	}
 
-	void Ball::ReboundFromPlatform()
-	{
-		direction->y *= -1;
-	}
-
 	void Ball::Update(float timeDelta)
 	{
-		const auto pos = sprite->getPosition() + BALL_SPEED * timeDelta * *direction;
-		sprite->setPosition(pos);
+		timeDelta = *multiplySpeed * timeDelta;
+		const sf::Vector2f position = sprite->getPosition() + SETTINGS.BALL_SPEED * timeDelta * *direction;
+		sprite->setPosition(position);
 
-		if (pos.x <= 0 || pos.x >= SCREEN_WIDTH)
+		if (position.x - SETTINGS.BALL_SIZE / 2.f <= 0 || position.x + SETTINGS.BALL_SIZE / 2.f >= SETTINGS.SCREEN_WIDTH)
 		{
 			direction->x *= -1;
 		}
 
-		if (pos.y <= 0 || pos.y >= SCREEN_HEIGHT)
+		if (position.y - SETTINGS.BALL_SIZE / 2.f <= 0 || position.y + SETTINGS.BALL_SIZE / 2.f >= SETTINGS.SCREEN_HEIGHT)
 		{
 			direction->y *= -1;
 		}
+		Emit();
+	}
+
+	void Ball::ChangeAngle(float angle)
+	{
+		*lastAngle = angle;
+
+		const auto pi = std::acos(-1.f);
+		direction->x = (angle / abs(angle)) * std::cos(pi / 180.f * angle);
+		direction->y = -1 * abs(std::sin(pi / 180.f * angle));
+	}
+
+	void Ball::ChangeSpeed(float multipleSpeed)
+	{
+		*multiplySpeed = multipleSpeed;
+	}
+
+	void Ball::InvertDirectionX()
+	{
+		direction->x *= -1;
+	}
+
+	void Ball::InvertDirectionY()
+	{
+		direction->y *= -1;
+	}
+
+	void Ball::OnHit()
+	{
+		*lastAngle += random<float>(-5, 5);
+		ChangeAngle(*lastAngle);
 	}
 }

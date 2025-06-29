@@ -9,21 +9,21 @@ namespace Arkanoid
 {
 	struct MenuItem
 	{
-		Alignment childrenAlignment = Alignment::Min;
-		Orientation childrenOrientation = Orientation::Vertical;
-
-		sf::Color deselectedColor = sf::Color::White;
-		sf::Color selectedColor = sf::Color::Yellow;
-
-		sf::Text hintText; // Visible when child item is selected
 		sf::Text text;
+		sf::Text hintText; // Visible when child item is selected
+		Orientation childrenOrientation = Orientation::Vertical;
+		Alignment childrenAlignment = Alignment::Min;
+
+		sf::Color selectedColor = sf::Color::Yellow;
+		sf::Color deselectedColor = sf::Color::White;
+
+		std::vector<MenuItem> childrens;
 
 		std::function<void(MenuItem& item)> onPressCallback;
-		std::vector<MenuItem> childrens;
 
 		MenuItem* parent = nullptr;
 
-		float childrenSpacing = 10.0f;
+		float childrenSpacing = 10.f;
 		bool isEnabled = true;
 	};
 

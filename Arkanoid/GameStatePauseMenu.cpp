@@ -51,6 +51,7 @@ namespace Arkanoid
 				menu->PressOnSelectedItem();
 			}
 
+			Orientation orientation = menu->GetCurrentContext().childrenOrientation;
 			if (event.key.code == sf::Keyboard::Up)
 			{
 				menu->SwitchToPreviousMenuItem();
@@ -64,7 +65,7 @@ namespace Arkanoid
 
 	void GameStatePauseMenuData::Init()
 	{
-		assert(font->loadFromFile(RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
+		assert(font->loadFromFile(SETTINGS.RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
 
 		background->setFillColor(sf::Color(0, 0, 0, 128)); // Semi-transparent black
 
@@ -79,9 +80,12 @@ namespace Arkanoid
 
 		MenuItem exitItem;
 		SetTextData(exitItem.text, "Exit to main menu", *font, 24);
+		//exitItem.text.setString("Exit to main menu");
+		//exitItem.text.setFont(font);
+		//exitItem.text.setCharacterSize(24);
 		exitItem.onPressCallback = [](MenuItem&)
 			{
-				Application::Instance().GetGame().SwitchStateTo(GameStateType::MainMenu);
+				Application::Instance().GetGame().ExitGame();
 			};
 
 		MenuItem pauseMenu;

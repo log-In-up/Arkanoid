@@ -11,6 +11,11 @@ namespace Arkanoid
 		return false;
 	}
 
+	void DrawSprite(const sf::Sprite& sprite, sf::RenderWindow& window)
+	{
+		window.draw(sprite);
+	}
+
 	float GetManhattanDistanceBetweenSprites(const sf::Sprite& spriteFrom, const sf::Sprite& spriteTo) {
 		const auto result = spriteTo.getPosition() - spriteFrom.getPosition();
 		return std::fabs(result.x) + std::fabs(result.y);
@@ -29,11 +34,6 @@ namespace Arkanoid
 	sf::Vector2f GetVectorBetweenSprites(const sf::Sprite& spriteFrom, const sf::Sprite& spriteTo) {
 		const auto result = spriteTo.getPosition() - spriteFrom.getPosition();
 		return result;
-	}
-
-	void DrawSprite(const sf::Sprite& sprite, sf::RenderWindow& window)
-	{
-		window.draw(sprite);
 	}
 
 	void InitSprite(sf::Sprite& sprite, float desiredWidth, float desiredHeight, const sf::Texture& texture)

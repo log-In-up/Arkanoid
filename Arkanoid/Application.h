@@ -1,5 +1,5 @@
 #pragma once
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics.hpp>
 
 #include "Game.h"
 
@@ -17,7 +17,9 @@ namespace Arkanoid
 		}
 	public:
 		Application(const Application& app) = delete;
+
 		Application& operator= (const Application&) = delete;
+
 		static Application& Instance();
 		void Run();
 	private:

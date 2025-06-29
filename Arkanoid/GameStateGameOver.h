@@ -1,29 +1,28 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+#include "GameStateData.h"
+
 namespace Arkanoid
 {
 	class Game;
 
-	class GameStateGameOverData
+	class GameStateGameOverData : public GameStateData
 	{
 	private:
-		float timeSinceGameOver = 0.f;
-
-		// Resources
 		sf::Font* font;
-
-		// UI data
 		sf::RectangleShape* background;
 		sf::Text* gameOverText;
 		sf::Text* hintText;
 		std::vector<sf::Text>* recordsTableTexts;
+
+		float timeSinceGameOver = 0.f;
 	public:
 		GameStateGameOverData();
 		~GameStateGameOverData();
-		void Draw(sf::RenderWindow& window);
-		void HandleWindowEvent(const sf::Event& event);
-		void Init();
-		void Update(float timeDelta);
+		void Draw(sf::RenderWindow& window) override;
+		void HandleWindowEvent(const sf::Event& event) override;
+		void Init() override;
+		void Update(float timeDelta) override;
 	};
 }

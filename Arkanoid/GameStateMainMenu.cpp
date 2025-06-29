@@ -60,13 +60,13 @@ namespace Arkanoid
 
 	void GameStateMainMenuData::Init()
 	{
-		assert(font->loadFromFile(RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
+		assert(font->loadFromFile(SETTINGS.RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
 
 		MenuItem startGame;
 		SetTextData(startGame.text, "Start Game", *font, 24);
 		startGame.onPressCallback = [](MenuItem&)
 			{
-				Application::Instance().GetGame().SwitchStateTo(GameStateType::Playing);
+				Application::Instance().GetGame().StartGame();
 			};
 
 		const bool isInfiniteApples = Application::Instance().GetGame().IsEnableOptions(GameOptions::InfiniteApples);
@@ -108,14 +108,14 @@ namespace Arkanoid
 		SetTextData(recordsItem.text, "Records", *font, 24);
 		recordsItem.onPressCallback = [](MenuItem&)
 			{
-				Application::Instance().GetGame().PushState(GameStateType::Records, true);
+				Application::Instance().GetGame().ShowRecords();
 			};
 
 		MenuItem yesItem;
 		SetTextData(yesItem.text, "Yes", *font, 24);
 		yesItem.onPressCallback = [](MenuItem&)
 			{
-				Application::Instance().GetGame().SwitchStateTo(GameStateType::None);
+				Application::Instance().GetGame().QuitGame();
 			};
 
 		MenuItem noItem;

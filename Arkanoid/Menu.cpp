@@ -15,8 +15,10 @@ namespace Arkanoid
 
 		std::vector<sf::Text*> texts;
 		texts.reserve(expandedItem.childrens.size());
-		for (auto& child : expandedItem.childrens) {
-			if (child.isEnabled) {
+		for (auto& child : expandedItem.childrens)
+		{
+			if (child.isEnabled)
+			{
 				texts.push_back(&child.text);
 			}
 		}
@@ -34,7 +36,8 @@ namespace Arkanoid
 	void Menu::GoBack()
 	{
 		MenuItem& parent = GetCurrentContext();
-		if (&parent != &rootItem) {
+		if (&parent != &rootItem)
+		{
 			SelectMenuItem(parent);
 		}
 	}
@@ -44,59 +47,72 @@ namespace Arkanoid
 		rootItem = item;
 
 		InitMenuItem(rootItem);
-		if (!rootItem.childrens.empty()) {
+
+		if (!rootItem.childrens.empty())
+		{
 			SelectMenuItem(rootItem.childrens.front());
 		}
 	}
 
 	void Menu::PressOnSelectedItem()
 	{
-		if (!selectedItem) {
+		if (!selectedItem)
+		{
 			return;
 		}
 
-		if (selectedItem->onPressCallback) {
+		if (selectedItem->onPressCallback)
+		{
 			selectedItem->onPressCallback(*selectedItem);
 			return;
 		}
 
 		// default behaviour
-		if (!selectedItem->childrens.empty()) {
+		if (!selectedItem->childrens.empty())
+		{
 			SelectMenuItem(selectedItem->childrens.front());
 		}
 	}
 
 	void Menu::SwitchToNextMenuItem()
 	{
-		if (!selectedItem) {
+		if (!selectedItem)
+		{
 			return;
 		}
 
 		MenuItem* parent = selectedItem->parent;
 		assert(parent); // There always should be parent
 
-		auto it = std::find_if(parent->childrens.begin(), parent->childrens.end(), [this](const auto& item) {
-			return selectedItem == &item;
+		auto it = std::find_if(parent->childrens.begin(), parent->childrens.end(), [this](const auto& item)
+			{
+				return selectedItem == &item;
 			});
 		it = std::next(it);
-		if (it != parent->childrens.end()) {
+
+		if (it != parent->childrens.end())
+		{
 			SelectMenuItem(*it);
 		}
 	}
 
 	void Menu::SwitchToPreviousMenuItem()
 	{
-		if (!selectedItem) {
+		if (!selectedItem)
+		{
 			return;
 		}
 
 		MenuItem* parent = selectedItem->parent;
 		assert(parent); // There always should be parent
 
-		auto it = std::find_if(parent->childrens.begin(), parent->childrens.end(), [this](const auto& item) {
-			return selectedItem == &item;
+		auto it = std::find_if(parent->childrens.begin(), parent->childrens.end(), [this](const auto& item)
+			{
+				return selectedItem == &item;
 			});
-		if (it != parent->childrens.begin()) {
+
+		if (it != parent->childrens.begin())
+		{
 			SelectMenuItem(*std::prev(it));
 		}
 	}

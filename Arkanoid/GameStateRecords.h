@@ -2,25 +2,25 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
+#include "GameStateData.h"
+
 namespace Arkanoid
 {
 	class Game;
 
-	class GameStateRecordsData
+	class GameStateRecordsData : public GameStateData
 	{
 	private:
-		// Resources
 		sf::Font* font;
-
 		sf::Text* hintText;
 		sf::Text* titleText;
 		std::vector<sf::Text>* tableTexts;
 	public:
 		GameStateRecordsData();
 		~GameStateRecordsData();
-		void Draw(sf::RenderWindow& window);
-		void HandleWindowEvent(const sf::Event& event);
-		void Init();
-		void Update(float timeDelta);
+		void Draw(sf::RenderWindow& window) override;
+		void HandleWindowEvent(const sf::Event& event) override;
+		void Init() override;
+		void Update(float timeDelta) override;
 	};
 }

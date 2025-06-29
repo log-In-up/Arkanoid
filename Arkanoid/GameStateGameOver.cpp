@@ -8,8 +8,6 @@
 
 namespace Arkanoid
 {
-	const char* PLAYER_NAME = "Player";
-
 	GameStateGameOverData::GameStateGameOverData()
 	{
 		font = new sf::Font();
@@ -64,18 +62,18 @@ namespace Arkanoid
 		{
 			if (event.key.code == sf::Keyboard::Space)
 			{
-				Application::Instance().GetGame().SwitchStateTo(GameStateType::Playing);
+				Application::Instance().GetGame().StartGame();
 			}
 			else if (event.key.code == sf::Keyboard::Escape)
 			{
-				Application::Instance().GetGame().SwitchStateTo(GameStateType::MainMenu);
+				Application::Instance().GetGame().ExitGame();
 			}
 		}
 	}
 
 	void GameStateGameOverData::Init()
 	{
-		assert(font->loadFromFile(RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
+		assert(font->loadFromFile(SETTINGS.RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
 
 		timeSinceGameOver = 0.f;
 
@@ -86,7 +84,7 @@ namespace Arkanoid
 		SetTextData(*gameOverText, "GAME OVER", *font, 48, sf::Color::Red);
 		gameOverText->setStyle(sf::Text::Bold);
 
-		recordsTableTexts->reserve(MAX_RECORDS_TABLE_SIZE);
+		recordsTableTexts->reserve(SETTINGS.MAX_RECORDS_TABLE_SIZE);
 
 		std::multimap<int, std::string> sortedRecordsTable;
 		Game& game = Application::Instance().GetGame();
@@ -97,7 +95,8 @@ namespace Arkanoid
 
 		bool isPlayerInTable = false;
 		auto it = sortedRecordsTable.rbegin();
-		for (int i = 0; i < MAX_RECORDS_TABLE_SIZE && it != sortedRecordsTable.rend(); ++i, ++it) // Note, we can do several actions in for action block
+
+		for (int i = 0; i < SETTINGS.MAX_RECORDS_TABLE_SIZE && it != sortedRecordsTable.rend(); ++i, ++it) // Note, we can do several actions in for action block
 		{
 			recordsTableTexts->emplace_back(); // Create text in place
 			sf::Text& text = recordsTableTexts->back();
@@ -105,9 +104,9 @@ namespace Arkanoid
 			// We can use streams for writing into string and reading from it
 			std::stringstream sstream;
 			sstream << i + 1 << ". " << it->second << ": " << it->first;
-
 			SetTextData(text, sstream.str(), *font, 24);
-			if (it->second == PLAYER_NAME)
+
+			if (it->second == SETTINGS.PLAYER_NAME)
 			{
 				text.setFillColor(sf::Color::Green);
 				isPlayerInTable = true;
@@ -118,13 +117,14 @@ namespace Arkanoid
 			}
 		}
 
-		// If player is not in table, replace last element with him
 		if (!isPlayerInTable)
 		{
 			sf::Text& text = recordsTableTexts->back();
 			std::stringstream sstream;
-			int playerScores = game.GetRecordByPlayerId(PLAYER_NAME);
-			sstream << MAX_RECORDS_TABLE_SIZE << ". " << PLAYER_NAME << ": " << playerScores;
+
+			int playerScores = game.GetRecordByPlayerId(SETTINGS.PLAYER_NAME);
+			sstream << SETTINGS.MAX_RECORDS_TABLE_SIZE << ". " << SETTINGS.PLAYER_NAME << ": " << playerScores;
+
 			text.setString(sstream.str());
 			text.setFillColor(sf::Color::Green);
 		}

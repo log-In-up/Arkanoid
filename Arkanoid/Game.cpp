@@ -14,26 +14,16 @@ namespace Arkanoid
 	{
 		stateStack = new std::vector<GameState>();
 
-		// Generate fake records table
 		recordsTable = new RecordsTable();
-		recordsTable->insert({ "John", MAX_APPLES / 2 });
-		recordsTable->insert({ "Jane", MAX_APPLES / 3 });
-		recordsTable->insert({ "Alice", MAX_APPLES / 4 });
-		recordsTable->insert({ "Bob", MAX_APPLES / 5 });
-		recordsTable->insert({ "Clementine", MAX_APPLES / 5 });
-
-		//recordsTable =
-		//{
-		//	{"John", MAX_APPLES / 2},
-		//	{"Jane", MAX_APPLES / 3 },
-		//	{"Alice", MAX_APPLES / 4 },
-		//	{"Bob", MAX_APPLES / 5 },
-		//	{"Clementine", MAX_APPLES / 5 },
-		//};
+		recordsTable->insert({ "John", SETTINGS.MAX_APPLES / 2 });
+		recordsTable->insert({ "Jane", SETTINGS.MAX_APPLES / 3 });
+		recordsTable->insert({ "Alice", SETTINGS.MAX_APPLES / 4 });
+		recordsTable->insert({ "Bob", SETTINGS.MAX_APPLES / 5 });
+		recordsTable->insert({ "Clementine", SETTINGS.MAX_APPLES / 5 });
 
 		stateChangeType = GameStateChangeType::None;
 		pendingGameStateType = GameStateType::None;
-		pendingGameStateIsExclusivelyVisible = new bool(false);
+		pendingGameStateIsExclusivelyVisible = false;
 		SwitchStateTo(GameStateType::MainMenu);
 	}
 
@@ -45,8 +35,6 @@ namespace Arkanoid
 		recordsTable->clear();
 		delete recordsTable;
 
-		delete pendingGameStateIsExclusivelyVisible;
-
 		Shutdown();
 	}
 
@@ -56,11 +44,93 @@ namespace Arkanoid
 		return isEnable;
 	}
 
+	int Game::GetRecordByPlayerId(const std::string& playerId) const
+	{
+		auto it = recordsTable->find(playerId);
+		return it == recordsTable->end() ? 0 : it->second;
+	}
+
+	void Game::ExitGame()
+	{
+		SwitchStateTo(GameStateType::MainMenu);
+	}
+
+	void Game::LoadNextLevel()
+	{
+		assert(stateStack->back().GetType() == GameStateType::Playing);
+		auto playingData = (stateStack->back().GetData<GameStatePlayingData>());
+		playingData->LoadNextLevel();
+	}
+
+	void Game::LooseGame()
+	{
+		PushState(GameStateType::GameOver, false);
+	}
+
+	void Game::PauseGame()
+	{
+		PushState(GameStateType::ExitDialog, false);
+	}
+
+	void Game::PopState()
+	{
+		pendingGameStateType = GameStateType::None;
+		pendingGameStateIsExclusivelyVisible = false;
+		stateChangeType = GameStateChangeType::Pop;
+	}
+
+	void Game::QuitGame()
+	{
+		SwitchStateTo(GameStateType::None);
+	}
+
+	void Game::SetOption(GameOptions option, bool value)
+	{
+		if (value)
+		{
+			options = (GameOptions)((std::uint8_t)options | (std::uint8_t)option);
+		}
+		else
+		{
+			options = (GameOptions)((std::uint8_t)options & ~(std::uint8_t)option);
+		}
+	}
+
+	void Game::ShowRecords()
+	{
+		PushState(GameStateType::Records, true);
+	}
+
+	void Game::StartGame()
+	{
+		SwitchStateTo(GameStateType::Playing);
+	}
+
+	void Game::UpdateGame(float timeDelta, sf::RenderWindow& window)
+	{
+		HandleWindowEvents(window);
+
+		if (Update(timeDelta))
+		{
+			window.clear();
+			Draw(window);
+			window.display();
+		}
+		else
+		{
+			window.close();
+		}
+	}
+
+	void Game::WinGame()
+	{
+		PushState(GameStateType::GameWin, false);
+	}
+
 	bool Game::Update(float timeDelta)
 	{
 		if (stateChangeType == GameStateChangeType::Switch)
 		{
-			// Shutdown all game states
 			while (stateStack->size() > 0)
 			{
 				stateStack->pop_back();
@@ -68,14 +138,12 @@ namespace Arkanoid
 		}
 		else if (stateChangeType == GameStateChangeType::Pop)
 		{
-			// Shutdown only current game state
 			if (stateStack->size() > 0)
 			{
 				stateStack->pop_back();
 			}
 		}
 
-		// Initialize new game state if needed
 		if (pendingGameStateType != GameStateType::None)
 		{
 			stateStack->push_back(GameState(pendingGameStateType, pendingGameStateIsExclusivelyVisible));
@@ -83,7 +151,7 @@ namespace Arkanoid
 
 		stateChangeType = GameStateChangeType::None;
 		pendingGameStateType = GameStateType::None;
-		*pendingGameStateIsExclusivelyVisible = false;
+		pendingGameStateIsExclusivelyVisible = false;
 
 		if (stateStack->size() > 0)
 		{
@@ -92,12 +160,6 @@ namespace Arkanoid
 		}
 
 		return false;
-	}
-
-	int Game::GetRecordByPlayerId(const std::string& playerId) const
-	{
-		auto it = recordsTable->find(playerId);
-		return it == recordsTable->end() ? 0 : it->second;
 	}
 
 	void Game::Draw(sf::RenderWindow& window)
@@ -139,33 +201,15 @@ namespace Arkanoid
 		}
 	}
 
-	void Game::PopState()
-	{
-		pendingGameStateType = GameStateType::None;
-		*pendingGameStateIsExclusivelyVisible = false;
-		stateChangeType = GameStateChangeType::Pop;
-	}
-
 	void Game::PushState(GameStateType stateType, bool isExclusivelyVisible)
 	{
 		pendingGameStateType = stateType;
-		*pendingGameStateIsExclusivelyVisible = isExclusivelyVisible;
+		pendingGameStateIsExclusivelyVisible = isExclusivelyVisible;
 		stateChangeType = GameStateChangeType::Push;
-	}
-
-	void Game::SetOption(GameOptions option, bool value)
-	{
-		if (value) {
-			options = (GameOptions)((std::uint8_t)options | (std::uint8_t)option);
-		}
-		else {
-			options = (GameOptions)((std::uint8_t)options & ~(std::uint8_t)option);
-		}
 	}
 
 	void Game::Shutdown()
 	{
-		// Shutdown all game states
 		while (stateStack->size() > 0)
 		{
 			stateStack->pop_back();
@@ -173,13 +217,13 @@ namespace Arkanoid
 
 		stateChangeType = GameStateChangeType::None;
 		pendingGameStateType = GameStateType::None;
-		*pendingGameStateIsExclusivelyVisible = false;
+		pendingGameStateIsExclusivelyVisible = false;
 	}
 
 	void Game::SwitchStateTo(GameStateType newState)
 	{
 		pendingGameStateType = newState;
-		*pendingGameStateIsExclusivelyVisible = false;
+		pendingGameStateIsExclusivelyVisible = false;
 		stateChangeType = GameStateChangeType::Switch;
 	}
 
