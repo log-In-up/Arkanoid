@@ -3,12 +3,13 @@
 
 namespace Arkanoid
 {
-	class GameWorld {
+	class GameWorld
+	{
 	private:
-
 		GameWorld() = default;
 	public:
-		static GameWorld& Instance() {
+		static GameWorld& Instance()
+		{
 			static GameWorld gameWorld;
 			return gameWorld;
 		}
@@ -29,6 +30,9 @@ namespace Arkanoid
 
 		const unsigned int BALL_SIZE = 20;
 		const unsigned int BALL_SPEED = 400;
+
+		const unsigned int BLOCK_REWARD = 1;
+		const unsigned int THREE_HIT_BLOCK_REWARD = 3;
 
 		const unsigned int PLATFORM_WIDTH = 60;
 		const unsigned int PLATFORM_HEIGHT = 20;

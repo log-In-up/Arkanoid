@@ -11,10 +11,12 @@ namespace Arkanoid
 	{
 		hitCount = 1;
 		sprite->setColor(color);
+		rewardAmount = new int(const_cast<unsigned int&>(SETTINGS.BLOCK_REWARD)); //SETTINGS.BLOCK_REWARD;
 	}
 
 	Block::~Block()
 	{
+		delete rewardAmount;
 	}
 
 	bool Block::GetCollision(std::shared_ptr<Colladiable> collidableObject) const
@@ -31,6 +33,11 @@ namespace Arkanoid
 	bool Block::IsBroken() const
 	{
 		return hitCount <= 0;
+	}
+
+	int Block::GetReward() const
+	{
+		return *rewardAmount;
 	}
 
 	void Block::Update(float timeDelta)

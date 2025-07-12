@@ -20,6 +20,7 @@ namespace Arkanoid
 		recordsTable->insert({ "Alice", SETTINGS.MAX_APPLES / 4 });
 		recordsTable->insert({ "Bob", SETTINGS.MAX_APPLES / 5 });
 		recordsTable->insert({ "Clementine", SETTINGS.MAX_APPLES / 5 });
+		recordsTable->insert({ SETTINGS.PLAYER_NAME, 0 });
 
 		stateChangeType = GameStateChangeType::None;
 		pendingGameStateType = GameStateType::None;
@@ -103,6 +104,8 @@ namespace Arkanoid
 
 	void Game::StartGame()
 	{
+		recordsTable->at(SETTINGS.PLAYER_NAME) = 0;
+
 		SwitchStateTo(GameStateType::Playing);
 	}
 
@@ -120,6 +123,11 @@ namespace Arkanoid
 		{
 			window.close();
 		}
+	}
+
+	void Game::UpdateRecord(const std::string& playerId, int score)
+	{
+		recordsTable->at(playerId) = std::max(recordsTable->at(playerId), score);
 	}
 
 	void Game::WinGame()
@@ -225,10 +233,5 @@ namespace Arkanoid
 		pendingGameStateType = newState;
 		pendingGameStateIsExclusivelyVisible = false;
 		stateChangeType = GameStateChangeType::Switch;
-	}
-
-	void Game::UpdateRecord(const std::string& playerId, int score)
-	{
-		recordsTable->at(playerId) = std::max(recordsTable->at(playerId), score);
 	}
 }

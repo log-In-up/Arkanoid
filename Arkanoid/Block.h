@@ -16,11 +16,13 @@ namespace Arkanoid
 	{
 	protected:
 		int hitCount;
+		int* rewardAmount;
 	public:
 		Block(const sf::Vector2f& position, const sf::Color& color = sf::Color::Green);
 		virtual ~Block();
 		bool GetCollision(std::shared_ptr<Colladiable> collidableObject) const override;
 		bool IsBroken() const;
+		int GetReward() const;
 		void Update(float timeDelta) override;
 	protected:
 		void OnHit();

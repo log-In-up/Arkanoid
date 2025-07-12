@@ -171,7 +171,8 @@ namespace Arkanoid
 
 	void GameStatePlayingData::LoadNextLevel()
 	{
-		if (currentLevel >= levelLoder->GetLevelCount() - 1) {
+		if (currentLevel >= levelLoder->GetLevelCount() - 1)
+		{
 			Game& game = Application::Instance().GetGame();
 
 			game.WinGame();
@@ -191,28 +192,33 @@ namespace Arkanoid
 
 	void GameStatePlayingData::Notify(std::shared_ptr<IObservable> observable)
 	{
-		if (auto block = std::dynamic_pointer_cast<Block>(observable); block)\
+		if (auto block = std::dynamic_pointer_cast<Block>(observable); block)
 		{
 			--breackableBlocksCount;
 			Game& game = Application::Instance().GetGame();
-			if (breackableBlocksCount == 0)\
+			if (breackableBlocksCount == 0)
 			{
 				game.LoadNextLevel();
 			}
 			else
 			{
-				auto percent = random<int>(0, 100);
+				int percent = random<int>(0, 100);
 
+				// bonuses
 				if (SETTINGS.BONUS_PROPABILITY_PERCENT >= percent)
 				{
 					BonusType bonusType = (BonusType)(random<int>(0, (int)BonusType::Count - 1));
 					bonuses->at(bonusType).Activate();
 				}
+
+				int playerRecord = game.GetRecordByPlayerId(SETTINGS.PLAYER_NAME);
+				game.UpdateRecord(SETTINGS.PLAYER_NAME, playerRecord + block->GetReward());
 			}
 		}
 		else if (auto ball = std::dynamic_pointer_cast<Ball>(observable); ball)
 		{
-			if (ball->GetPosition().y > gameObjects->front()->GetRect().top) {
+			if (ball->GetPosition().y > gameObjects->front()->GetRect().top)
+			{
 				gameOverSound->play();
 				Application::Instance().GetGame().LooseGame();
 			}
@@ -230,7 +236,7 @@ namespace Arkanoid
 				bonusPair.second.Update(timeDelta);
 			});
 
-		std::shared_ptr <Platform> platform = std::dynamic_pointer_cast<Platform>(gameObjects->at(0));
+		std::shared_ptr<Platform> platform = std::dynamic_pointer_cast<Platform>(gameObjects->at(0));
 		std::shared_ptr<Ball> ball = std::dynamic_pointer_cast<Ball>(gameObjects->at(1));
 
 		auto isCollision = platform->CheckCollision(ball);
@@ -272,7 +278,7 @@ namespace Arkanoid
 		}
 		auto self = weak_from_this();
 
-		auto level = levelLoder->GetLevel(currentLevel);
+		Level level = levelLoder->GetLevel(currentLevel);
 
 		for (auto pairPosBlockTYpe : level.m_blocks)
 		{

@@ -13,13 +13,16 @@ public:
 	}
 
 protected:
-	virtual void Emit() {
+	virtual void Emit()
+	{
 		auto self = shared_from_this();
-		std::for_each(observers.begin(), observers.end(), [self](auto observer) {
-			auto lockedObserver = observer.lock();
-			if (lockedObserver) {
-				lockedObserver->Notify(self);
-			}
+		std::for_each(observers.begin(), observers.end(), [self](auto observer)
+			{
+				auto lockedObserver = observer.lock();
+				if (lockedObserver)
+				{
+					lockedObserver->Notify(self);
+				}
 			});
 	}
 private:

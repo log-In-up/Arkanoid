@@ -7,6 +7,7 @@ namespace Arkanoid
 		: SmoothDestroyableBlock(position, sf::Color::Magenta)
 	{
 		hitCount = 3;
+		rewardAmount = new int(const_cast<unsigned int&>(SETTINGS.THREE_HIT_BLOCK_REWARD));
 	}
 
 	void ThreeHitBlock::OnHit()

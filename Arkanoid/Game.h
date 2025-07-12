@@ -59,6 +59,7 @@ namespace Arkanoid
 		void ShowRecords();
 		void StartGame();
 		void UpdateGame(float timeDelta, sf::RenderWindow& window);
+		void UpdateRecord(const std::string& playerId, int score);
 		void WinGame();
 	private:
 		bool Update(float timeDelta); // Return false if game should be closed
@@ -67,6 +68,5 @@ namespace Arkanoid
 		void PushState(GameStateType stateType, bool isExclusivelyVisible); // Add new game state on top of the stack
 		void Shutdown();
 		void SwitchStateTo(GameStateType newState); // Remove all game states from the stack and add new one
-		void UpdateRecord(const std::string& playerId, int score);
 	};
 }
