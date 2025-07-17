@@ -22,7 +22,6 @@ namespace Arkanoid
 		const std::string LEVELS_CONFIG_PATH = RESOURCES_PATH + "levels.config";
 
 		// Game settings constants
-		const float ACCELERATION = 10.f;
 		const int MAX_APPLES = 80;
 		const unsigned int SCREEN_WIDTH = 800;
 		const unsigned int SCREEN_HEIGHT = 600;
@@ -31,14 +30,17 @@ namespace Arkanoid
 		const unsigned int BALL_SIZE = 20;
 		const unsigned int BALL_SPEED = 400;
 
+		const unsigned int BONUS_BALL_SIZE = 15;
+		const float BONUS_BALL_SPEED = 100.f;
+
 		const unsigned int BLOCK_REWARD = 1;
 		const unsigned int THREE_HIT_BLOCK_REWARD = 3;
 
 		const unsigned int PLATFORM_WIDTH = 60;
 		const unsigned int PLATFORM_HEIGHT = 20;
 		const float PLATFORM_SPEED = 300.f;
+		const float PLATFORM_SPEED_INCREASED = 750.f;
 
-		const unsigned int BLOCKS_COUNT_ROWS = 4;
 		const unsigned int BLOCKS_COUNT_IN_ROW = 15;
 		const unsigned int BLOCK_SHIFT = 5;
 		const unsigned int BLOCK_WIDTH = (SCREEN_WIDTH - (BLOCKS_COUNT_IN_ROW + 1) * BLOCK_SHIFT) / BLOCKS_COUNT_IN_ROW;
@@ -49,8 +51,8 @@ namespace Arkanoid
 
 		const std::string GAME_NAME = "ArkanoidGame";
 		const float BREAK_DELAY = 1.f;
-		const float BONUS_DURATION = 30.f;
-		const int BONUS_PROPABILITY_PERCENT = 5;
+		const float BONUS_DURATION = 10.f;
+		const int BONUS_PROPABILITY_PERCENT = 10;
 	};
 }
 

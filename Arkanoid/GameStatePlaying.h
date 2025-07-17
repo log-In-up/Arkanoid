@@ -10,20 +10,13 @@
 #include "IObserver.h"
 #include "LevelLoader.h"
 #include "Platform.h"
+#include "BonusObject.h"
 
 namespace Arkanoid
 {
 	class Game;
 	class Block;
 	class BlockFactory;
-
-	enum class BonusType
-	{
-		BiggerPlatform,
-		SlowBall,
-
-		Count
-	};
 
 	class GameStatePlayingData : public GameStateData, public IObserver, public std::enable_shared_from_this<GameStatePlayingData>
 	{
@@ -37,6 +30,7 @@ namespace Arkanoid
 
 		std::vector<std::shared_ptr<GameObject>>* gameObjects;
 		std::vector<std::shared_ptr<Block>>* blocks;
+		std::vector<std::shared_ptr<BonusObject>>* bonusObjects;
 
 		sf::Text* scoreText;
 		sf::Text* inputHintText;

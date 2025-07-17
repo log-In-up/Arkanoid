@@ -11,7 +11,7 @@ namespace Arkanoid
 	{
 		hitCount = 1;
 		sprite->setColor(color);
-		rewardAmount = new int(const_cast<unsigned int&>(SETTINGS.BLOCK_REWARD)); //SETTINGS.BLOCK_REWARD;
+		rewardAmount = new int(const_cast<unsigned int&>(SETTINGS.BLOCK_REWARD));
 	}
 
 	Block::~Block()

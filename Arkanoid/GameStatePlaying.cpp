@@ -25,6 +25,7 @@ namespace Arkanoid
 
 		gameObjects = new std::vector<std::shared_ptr<GameObject>>();
 		blocks = new std::vector<std::shared_ptr<Block>>();
+		bonusObjects = new std::vector<std::shared_ptr<BonusObject>>();
 
 		scoreText = new sf::Text();
 		inputHintText = new sf::Text();
@@ -43,6 +44,7 @@ namespace Arkanoid
 	{
 		gameObjects->clear();
 		blocks->clear();
+		bonusObjects->clear();
 		factories->clear();
 
 		delete appleTexture;
@@ -53,6 +55,7 @@ namespace Arkanoid
 		delete bonusSoundBuffer;
 		delete gameObjects;
 		delete blocks;
+		delete bonusObjects;
 		delete scoreText;
 		delete inputHintText;
 		delete background;
@@ -144,8 +147,8 @@ namespace Arkanoid
 					platform->ChangeWidth(0.5);
 				}
 			},
-			SETTINGS.BONUS_DURATION
-		));
+			SETTINGS.BONUS_DURATION)
+		);
 
 		bonuses->emplace(BonusType::SlowBall, Bonus(
 			[wball = std::weak_ptr<Ball>(ball), &sound = bonusSound]()
@@ -165,8 +168,29 @@ namespace Arkanoid
 					ball->ChangeSpeed(1);
 				}
 			},
-			SETTINGS.BONUS_DURATION
-		));
+			SETTINGS.BONUS_DURATION)
+		);
+
+		bonuses->emplace(BonusType::FastPlatform, Bonus(
+			[wplatform = std::weak_ptr<Platform>(platform), &sound = bonusSound]()
+			{
+				auto platform = wplatform.lock();
+				if (platform)
+				{
+					sound->play();
+					platform->ChangeSpeed(SETTINGS.PLATFORM_SPEED_INCREASED);
+				}
+			},
+			[wplatform = std::weak_ptr<Platform>(platform)]()
+			{
+				auto platform = wplatform.lock();
+				if (platform)
+				{
+					platform->ChangeSpeed(SETTINGS.PLATFORM_SPEED);
+				}
+			},
+			SETTINGS.BONUS_DURATION)
+		);
 	}
 
 	void GameStatePlayingData::LoadNextLevel()
@@ -204,11 +228,16 @@ namespace Arkanoid
 			{
 				int percent = random<int>(0, 100);
 
-				// bonuses
 				if (SETTINGS.BONUS_PROPABILITY_PERCENT >= percent)
 				{
 					BonusType bonusType = (BonusType)(random<int>(0, (int)BonusType::Count - 1));
-					bonuses->at(bonusType).Activate();
+
+					//spawn bonus here
+					auto bonusObject = std::make_shared<BonusObject>(bonusType, block->GetPosition());
+					bonusObject->AddObserver(weak_from_this());
+
+					gameObjects->emplace_back(bonusObject);
+					bonusObjects->push_back(bonusObject);
 				}
 
 				int playerRecord = game.GetRecordByPlayerId(SETTINGS.PLAYER_NAME);
@@ -222,6 +251,16 @@ namespace Arkanoid
 				gameOverSound->play();
 				Application::Instance().GetGame().LooseGame();
 			}
+		}
+		else if (auto bonusObject = std::dynamic_pointer_cast<BonusObject>(observable); bonusObject)
+		{
+			bonuses->at(bonusObject->GetBonus()).Activate();
+
+			auto bonusObj = std::find(bonusObjects->begin(), bonusObjects->end(), bonusObject);
+			bonusObjects->erase(bonusObj);
+
+			auto object = std::find(gameObjects->begin(), gameObjects->end(), bonusObject);
+			gameObjects->erase(object);
 		}
 	}
 
@@ -239,7 +278,14 @@ namespace Arkanoid
 		std::shared_ptr<Platform> platform = std::dynamic_pointer_cast<Platform>(gameObjects->at(0));
 		std::shared_ptr<Ball> ball = std::dynamic_pointer_cast<Ball>(gameObjects->at(1));
 
-		auto isCollision = platform->CheckCollision(ball);
+		bool isCollision = platform->CheckCollision(ball);
+		for (std::shared_ptr<BonusObject> bonusObject : *bonusObjects)
+		{
+			if (bonusObject)
+			{
+				bonusObject->CheckCollision(platform);
+			}
+		}
 
 		bool needInverseDirX = false;
 		bool needInverseDirY = false;

@@ -39,6 +39,7 @@
     <ClInclude Include="SimpleBlockFactory.h" />
     <ClInclude Include="UnbreackableBlockFactory.h" />
     <ClInclude Include="ThreeHitBlockFactory.h" />
+    <ClInclude Include="BonusObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -120,6 +121,9 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="ThreeHitBlockFactory.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="BonusObject.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>

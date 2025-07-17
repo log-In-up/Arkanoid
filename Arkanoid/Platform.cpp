@@ -4,6 +4,7 @@
 #include "GameSettings.h"
 #include "Platform.h"
 #include "Sprite.h"
+#include "BonusObject.h"
 
 namespace
 {
@@ -15,6 +16,7 @@ namespace Arkanoid
 	Platform::Platform(const sf::Vector2f& position)
 		: GameObject(SETTINGS.TEXTURES_PATH + TEXTURE_ID + ".png", position, (float)SETTINGS.PLATFORM_WIDTH, (float)SETTINGS.PLATFORM_HEIGHT)
 	{
+		speed = SETTINGS.PLATFORM_SPEED;
 	}
 
 	bool Platform::CheckCollision(std::shared_ptr<Colladiable> collidable)
@@ -62,6 +64,11 @@ namespace Arkanoid
 		return std::fabs(ballPos.y - rect.top) <= SETTINGS.BALL_SIZE / 2.0;
 	}
 
+	void Platform::ChangeSpeed(float newSpeed)
+	{
+		speed = newSpeed;
+	}
+
 	void Platform::ChangeWidth(float multiplyWidth)
 	{
 		sprite->scale(sf::Vector2f(multiplyWidth, 1));
@@ -75,11 +82,11 @@ namespace Arkanoid
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		{
-			Move(-timeDelta * SETTINGS.PLATFORM_SPEED);
+			Move(-timeDelta * speed);
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 		{
-			Move(timeDelta * SETTINGS.PLATFORM_SPEED);
+			Move(timeDelta * speed);
 		}
 	}
 

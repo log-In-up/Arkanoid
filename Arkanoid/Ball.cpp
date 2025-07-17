@@ -16,7 +16,7 @@ namespace Arkanoid
 		: GameObject(SETTINGS.TEXTURES_PATH + TEXTURE_ID + ".png", position, (float)SETTINGS.BALL_SIZE, (float)SETTINGS.BALL_SIZE)
 	{
 		const float angle = 90;
-		const auto pi = std::acos(-1.f);
+		const float pi = std::acos(-1.f);
 
 		direction = new sf::Vector2f(std::cos(pi / 180.f * angle), std::sin(pi / 180.f * angle));
 
@@ -44,7 +44,7 @@ namespace Arkanoid
 		GameObject::Restart();
 
 		const float angle = 90;
-		const auto pi = std::acos(-1.f);
+		const float pi = std::acos(-1.f);
 
 		direction->x = std::cos(pi / 180.f * angle);
 		direction->y = std::sin(pi / 180.f * angle);
@@ -72,7 +72,7 @@ namespace Arkanoid
 	{
 		*lastAngle = angle;
 
-		const auto pi = std::acos(-1.f);
+		const float pi = std::acos(-1.f);
 		direction->x = (angle / abs(angle)) * std::cos(pi / 180.f * angle);
 		direction->y = -1 * abs(std::sin(pi / 180.f * angle));
 	}
