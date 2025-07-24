@@ -46,14 +46,17 @@ namespace Arkanoid
 
 		int breackableBlocksCount = 0;
 		int currentLevel = 0;
+
 	public:
 		GameStatePlayingData();
 		~GameStatePlayingData();
 		void Draw(sf::RenderWindow& window) override;
+		void GetStateData(Memento& memento) override;
 		void HandleWindowEvent(const sf::Event& event) override;
 		void Init() override;
 		void LoadNextLevel();
 		void Notify(std::shared_ptr<IObservable> observable) override;
+		void SetStateData(Memento& memento) override;
 		void Update(float timeDelta) override;
 	private:
 		void CreateBlocks();

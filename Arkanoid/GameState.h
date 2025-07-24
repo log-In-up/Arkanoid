@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "GameStateData.h"
+#include "Memento.h"
 
 namespace Arkanoid
 {
@@ -19,8 +20,8 @@ namespace Arkanoid
 	class GameState
 	{
 	private:
-		GameStateType type = GameStateType::None;
 		std::shared_ptr<GameStateData> data = nullptr;
+		GameStateType type = GameStateType::None;
 		bool isExclusivelyVisible = false;
 	public:
 		GameState(GameState&& state) noexcept
@@ -62,7 +63,9 @@ namespace Arkanoid
 		GameState& operator= (const GameState& state) = delete;
 
 		void Draw(sf::RenderWindow& window);
+		void GetGameStateData(Memento& memento);
 		void HandleWindowEvent(sf::Event& event);
+		void SetGameStateData(Memento& memento);
 		void Update(float timeDelta);
 	};
 }

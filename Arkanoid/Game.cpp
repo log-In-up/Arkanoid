@@ -13,6 +13,7 @@ namespace Arkanoid
 	Game::Game()
 	{
 		stateStack = new std::vector<GameState>();
+		caretaker = new Caretaker(*stateStack);
 
 		recordsTable = new RecordsTable();
 		recordsTable->insert({ "John", SETTINGS.MAX_APPLES / 2 });
@@ -32,6 +33,8 @@ namespace Arkanoid
 	{
 		stateStack->clear();
 		delete stateStack;
+
+		delete caretaker;
 
 		recordsTable->clear();
 		delete recordsTable;
@@ -61,6 +64,8 @@ namespace Arkanoid
 		assert(stateStack->back().GetType() == GameStateType::Playing);
 		auto playingData = (stateStack->back().GetData<GameStatePlayingData>());
 		playingData->LoadNextLevel();
+
+		caretaker->Save();
 	}
 
 	void Game::LooseGame()
@@ -155,6 +160,8 @@ namespace Arkanoid
 		if (pendingGameStateType != GameStateType::None)
 		{
 			stateStack->push_back(GameState(pendingGameStateType, pendingGameStateIsExclusivelyVisible));
+
+			caretaker->Undo();
 		}
 
 		stateChangeType = GameStateChangeType::None;
@@ -214,6 +221,8 @@ namespace Arkanoid
 		pendingGameStateType = stateType;
 		pendingGameStateIsExclusivelyVisible = isExclusivelyVisible;
 		stateChangeType = GameStateChangeType::Push;
+
+		caretaker->Save();
 	}
 
 	void Game::Shutdown()
@@ -233,5 +242,7 @@ namespace Arkanoid
 		pendingGameStateType = newState;
 		pendingGameStateIsExclusivelyVisible = false;
 		stateChangeType = GameStateChangeType::Switch;
+
+		caretaker->Save();
 	}
 }

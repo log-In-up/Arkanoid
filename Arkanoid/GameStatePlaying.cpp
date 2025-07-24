@@ -87,6 +87,13 @@ namespace Arkanoid
 		window.draw(*inputHintText);
 	}
 
+	void GameStatePlayingData::GetStateData(Memento& memento)
+	{
+		blocks->clear();
+		currentLevel = *memento.currentLevel;
+		CreateBlocks();
+	}
+
 	void GameStatePlayingData::HandleWindowEvent(const sf::Event& event)
 	{
 		if (event.type == sf::Event::KeyPressed)
@@ -124,8 +131,6 @@ namespace Arkanoid
 		auto ball = std::make_shared<Ball>(sf::Vector2f({ SETTINGS.SCREEN_WIDTH / 2.f, SETTINGS.SCREEN_HEIGHT - SETTINGS.PLATFORM_HEIGHT - SETTINGS.BALL_SIZE / 2.f }));
 		ball->AddObserver(weak_from_this());
 		gameObjects->emplace_back(ball);
-
-		CreateBlocks();
 
 		gameOverSound->setBuffer(*gameOverSoundBuffer);
 		bonusSound->setBuffer(*bonusSoundBuffer);
@@ -232,7 +237,6 @@ namespace Arkanoid
 				{
 					BonusType bonusType = (BonusType)(random<int>(0, (int)BonusType::Count - 1));
 
-					//spawn bonus here
 					auto bonusObject = std::make_shared<BonusObject>(bonusType, block->GetPosition());
 					bonusObject->AddObserver(weak_from_this());
 
@@ -262,6 +266,11 @@ namespace Arkanoid
 			auto object = std::find(gameObjects->begin(), gameObjects->end(), bonusObject);
 			gameObjects->erase(object);
 		}
+	}
+
+	void GameStatePlayingData::SetStateData(Memento& memento)
+	{
+		*memento.currentLevel = currentLevel;
 	}
 
 	void GameStatePlayingData::Update(float timeDelta)

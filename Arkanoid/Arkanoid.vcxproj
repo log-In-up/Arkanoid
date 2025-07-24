@@ -28,6 +28,7 @@
     <ClInclude Include="Collidable.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Caretaker.h" />
     <ClInclude Include="GameSettings.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateData.h" />
@@ -46,6 +47,7 @@
     <ClInclude Include="SimpleBlockFactory.h" />
     <ClInclude Include="SmoothDestroyableBlock.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="Memento.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="ThreeHitBlock.h" />
     <ClInclude Include="ThreeHitBlockFactory.h" />
@@ -63,6 +65,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameMain.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="Caretaker.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameStateData.cpp" />
     <ClCompile Include="GameStateGameOver.cpp" />
@@ -77,6 +80,7 @@
     <ClCompile Include="SimpleBlockFactory.cpp" />
     <ClCompile Include="SmoothDestroyableBlock.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="Memento.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="ThreeHitBlock.cpp" />
     <ClCompile Include="ThreeHitBlockFactory.cpp" />

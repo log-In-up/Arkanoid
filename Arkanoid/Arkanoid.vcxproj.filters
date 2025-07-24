@@ -40,6 +40,8 @@
     <ClInclude Include="UnbreackableBlockFactory.h" />
     <ClInclude Include="ThreeHitBlockFactory.h" />
     <ClInclude Include="BonusObject.h" />
+    <ClInclude Include="Memento.h" />
+    <ClInclude Include="Caretaker.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -124,6 +126,12 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="BonusObject.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Memento.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Caretaker.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>

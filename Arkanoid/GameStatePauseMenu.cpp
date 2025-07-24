@@ -37,6 +37,10 @@ namespace Arkanoid
 		menu->Draw(window, window.getView().getCenter(), { 0.5f, 0.f });
 	}
 
+	void GameStatePauseMenuData::GetStateData(Memento& memento)
+	{
+	}
+
 	void GameStatePauseMenuData::HandleWindowEvent(const sf::Event& event)
 	{
 		if (event.type == sf::Event::KeyPressed)
@@ -80,9 +84,6 @@ namespace Arkanoid
 
 		MenuItem exitItem;
 		SetTextData(exitItem.text, "Exit to main menu", *font, 24);
-		//exitItem.text.setString("Exit to main menu");
-		//exitItem.text.setFont(font);
-		//exitItem.text.setCharacterSize(24);
 		exitItem.onPressCallback = [](MenuItem&)
 			{
 				Application::Instance().GetGame().ExitGame();
@@ -95,6 +96,10 @@ namespace Arkanoid
 		pauseMenu.childrens.push_back(exitItem);
 
 		menu->Init(pauseMenu);
+	}
+
+	void GameStatePauseMenuData::SetStateData(Memento& memento)
+	{
 	}
 
 	void GameStatePauseMenuData::Update(float timeDelta)

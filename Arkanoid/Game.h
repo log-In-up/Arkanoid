@@ -5,6 +5,7 @@
 #include "GameSettings.h"
 #include "GameState.h"
 #include "Sprite.h"
+#include "Caretaker.h"
 
 namespace Arkanoid
 {
@@ -34,10 +35,11 @@ namespace Arkanoid
 
 		GameStateChangeType stateChangeType = GameStateChangeType::None;
 		GameStateType pendingGameStateType = GameStateType::None;
-		GameOptions options = GameOptions::Default;
 
 		RecordsTable* recordsTable;
+		Caretaker* caretaker;
 
+		GameOptions options = GameOptions::Default;
 		bool pendingGameStateIsExclusivelyVisible = false;
 	public:
 		const RecordsTable& GetRecordsTable() const
@@ -53,7 +55,8 @@ namespace Arkanoid
 		void LoadNextLevel();
 		void LooseGame();
 		void PauseGame();
-		void PopState(); // Remove current game state from the stack
+		/// Remove current game state from the stack
+		void PopState();
 		void QuitGame();
 		void SetOption(GameOptions option, bool value);
 		void ShowRecords();
@@ -62,11 +65,14 @@ namespace Arkanoid
 		void UpdateRecord(const std::string& playerId, int score);
 		void WinGame();
 	private:
-		bool Update(float timeDelta); // Return false if game should be closed
+		/// Return false if game should be closed
+		bool Update(float timeDelta);
 		void Draw(sf::RenderWindow& window);
 		void HandleWindowEvents(sf::RenderWindow& window);
-		void PushState(GameStateType stateType, bool isExclusivelyVisible); // Add new game state on top of the stack
+		/// Add new game state on top of the stack
+		void PushState(GameStateType stateType, bool isExclusivelyVisible);
 		void Shutdown();
-		void SwitchStateTo(GameStateType newState); // Remove all game states from the stack and add new one
+		/// Remove all game states from the stack and add new one
+		void SwitchStateTo(GameStateType newState);
 	};
 }

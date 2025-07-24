@@ -31,6 +31,10 @@ namespace Arkanoid
 		menu->Draw(window, viewSize / 2.f, { 0.5f, 0.f });
 	}
 
+	void GameStateMainMenuData::GetStateData(Memento& memento)
+	{
+	}
+
 	void GameStateMainMenuData::HandleWindowEvent(const sf::Event& event)
 	{
 		if (event.type == sf::Event::KeyPressed)
@@ -145,6 +149,10 @@ namespace Arkanoid
 		mainMenu.childrens.push_back(exitGameItem);
 
 		menu->Init(mainMenu);
+	}
+
+	void GameStateMainMenuData::SetStateData(Memento& memento)
+	{
 	}
 
 	void GameStateMainMenuData::Update(float timeDelta)

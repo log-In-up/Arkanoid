@@ -56,6 +56,10 @@ namespace Arkanoid
 		window.draw(*hintText);
 	}
 
+	void GameStateGameOverData::GetStateData(Memento& memento)
+	{
+	}
+
 	void GameStateGameOverData::HandleWindowEvent(const sf::Event& event)
 	{
 		if (event.type == sf::Event::KeyPressed)
@@ -130,6 +134,10 @@ namespace Arkanoid
 		}
 
 		SetTextData(*hintText, "Press Space to restart\nEsc to exit to main menu", *font, 24, sf::Color::White);
+	}
+
+	void GameStateGameOverData::SetStateData(Memento& memento)
+	{
 	}
 
 	void GameStateGameOverData::Update(float timeDelta)
